@@ -78,7 +78,16 @@ export default function CardList({navigation}) {
             ? 'Selecionar plano de assinatura'
             : 'Mudar de plano'}
         </SubmitButton>
-      ) : null}
+      ) : (
+        <SubmitButton
+          textColor={appColors.white}
+          color={appColors.primary}
+          onPress={() => addCard()}>
+          {cards && cards.length === 0
+            ? 'Selecionar plano de assinatura'
+            : 'Mudar de plano'}
+        </SubmitButton>
+      )}
       <CreditCardList onPress={onPress} cards={cards} />
       {expirate ? (
         <Title style={{marginHorizontal: 20, fontSize: 12}}>
