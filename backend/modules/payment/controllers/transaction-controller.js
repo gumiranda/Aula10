@@ -73,54 +73,55 @@ transactionController.prototype.post = async (req, res) => {
       await _repoUser.updatePayment(datav, req.usuarioLogado.user._id);
       res.status(200).send(transactionCreated);
     } else {
-      // const bytes = CryptoJS.AES.decrypt(
-      //   data.card_hash,
-      //   'hdfudhuidfhudhudah9d8s8f9d8a98as9d8s9d89as',
-      // );
-      // const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      // const cardToHash = {
-      //   card_number: decryptedData.card_number,
-      //   card_holder_name: decryptedData.card_holder_name,
-      //   card_cvv: decryptedData.card_cvv,
-      //   card_expiration_date: decryptedData.card_expiration_date,
-      // };
-      // const cardHash = await client.security.encrypt(cardToHash);
-      const cardHash = data.cardHash;
+      const {
+        cardHash,
+        name,
+        email,
+        phone,
+        cpf,
+        state,
+        city,
+        neighborhood,
+        zipcode,
+        value,
+        street_number,
+        street,
+      } = data;
       const pagarmeTransaction = await client.transactions.create({
         amount: 6000,
         payment_method: 'credit_card',
         card_hash: cardHash,
         customer: {
-          name: data.name,
+          name,
           external_id: '#3311',
-          email: data.email,
+          email,
           type: 'individual',
           country: 'br',
-          phone_numbers: [`+${data.phone}`],
+          phone_numbers: [`+${phone}`],
           documents: [
             {
               type: 'cpf',
-              number: data.cpf,
+              number: cpf,
             },
           ],
         },
         billing: {
-          name: data.name,
+          name,
           address: {
             country: 'br',
-            state: data.state,
-            city: data.city,
-            neighborhood: data.neighborhood,
-            street: data.street,
-            street_number: data.street_number,
-            zipcode: data.zipcode,
+            state,
+            city,
+            neighborhood,
+            street,
+            street_number,
+            zipcode,
           },
         },
         items: [
           {
             id: '1',
             title: 'Parcela mensal do aplicativo do dev doido',
-            unit_price: data.value ? data.value : 30,
+            unit_price: value ? value : 30,
             quantity: 1,
             tangible: true,
           },
@@ -129,17 +130,17 @@ transactionController.prototype.post = async (req, res) => {
       });
       const cardAux = pagarmeTransaction.card;
       const card = {
-        state: data.state,
-        city: data.city,
-        neighborhood: data.neighborhood,
-        street: data.street,
-        street_number: data.street_number,
+        state,
+        city,
+        neighborhood,
+        street,
+        street_number,
         name: cardAux.holder_name,
-        cpf: data.cpf,
-        phone: data.phone,
-        email: data.email,
-        street_number: data.street_number,
-        zipcode: data.zipcode,
+        cpf,
+        phone,
+        email,
+        street_number,
+        zipcode,
         card_id: cardAux.id,
         userId: req.usuarioLogado.user._id,
         brand: cardAux.brand,
