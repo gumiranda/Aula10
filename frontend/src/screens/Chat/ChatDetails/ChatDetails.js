@@ -9,7 +9,7 @@ import Background from '../../../components/Background/Background';
 import api from '../../../services/api';
 import {Title} from './styles';
 
-function Details({navigation}) {
+function ChatDetails({navigation}) {
   const [recvMessages, setRecvMessages] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -125,7 +125,7 @@ function Details({navigation}) {
     </Background>
   );
 }
-// Details.navigationOptions = {
+// ChatDetails.navigationOptions = {
 //   title: 'aaaaa',
 // };
-export default withNavigationFocus(Details);
+export default withNavigationFocus(ChatDetails);
