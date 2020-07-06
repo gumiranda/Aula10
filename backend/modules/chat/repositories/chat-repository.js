@@ -12,12 +12,12 @@ class chatRepository {
     return this._base.create(data);
   }
 
-  sendMessage(_id, data, user) {
+  sendMessage(_id, text, user) {
     return this._base._model.findOneAndUpdate(
       { _id },
       {
         $push: {
-          messages: { text: data.text, createdAt: new Date(), user },
+          messages: { text, createdAt: new Date(), user },
         },
         $inc: { countMessages: 1 },
       },

@@ -14,13 +14,14 @@ chatController.prototype.post = async (req, res) => {
 
 chatController.prototype.deleteMessage = async (req, res) => {
   try {
+    const { usuarioLogado, params } = req;
+    const { user } = usuarioLogado;
+    const { id, id2 } = params;
+    const { _id } = user;
     const validationContract = new validation();
+
     validationContract.isRequired(
-      req.body.text,
-      'o texto do comentário é obrigatório',
-    );
-    validationContract.isRequired(
-      req.params.id,
+      id,
       'o id do chat que será atualizado obrigatório',
     );
     if (!validationContract.isValid()) {
@@ -33,11 +34,7 @@ chatController.prototype.deleteMessage = async (req, res) => {
         .end();
       return;
     }
-    const resultado = await _repo.deleteMessage(
-      req.params.id,
-      req.params.id2,
-      req.usuarioLogado.user_id,
-    );
+    const resultado = await _repo.deleteMessage(id, id2, _id);
     if (resultado !== 'Operação inválida') {
       res.status(202).send({ message: 'Mensagem excluida com sucesso' });
     } else {
@@ -48,17 +45,22 @@ chatController.prototype.deleteMessage = async (req, res) => {
   }
 };
 chatController.prototype.sendMessage = async (req, res) => {
+  const { usuarioLogado, io, connectedUsers, body, params } = req;
+  const { user } = usuarioLogado;
+  const { id } = params;
+  const { text } = body;
+  const { _id, nome } = user;
   const validationContract = new validation();
   validationContract.isRequired(
-    req.body.text,
+    body.text,
     'o texto do comentário é obrigatório',
   );
   validationContract.isRequired(
-    req.params.id,
+    id,
     'o id do chat que será atualizado obrigatório',
   );
+
   try {
-    const data = req.body;
     if (!validationContract.isValid()) {
       res
         .status(400)
@@ -70,30 +72,26 @@ chatController.prototype.sendMessage = async (req, res) => {
       return;
     }
 
-    const resultado = await _repo.sendMessage(
-      req.params.id,
-      data,
-      req.usuarioLogado.user._id,
-    );
-    if (req.connectedUsers) {
+    const resultado = await _repo.sendMessage(id, text, _id);
+    if (connectedUsers) {
       let userid;
-      if (resultado.userDest.toString() === req.usuarioLogado.user._id) {
+      if (resultado.userDest.toString() === _id) {
         userid = resultado.userRemet;
       } else {
         userid = resultado.userDest;
       }
-      const userSocket = req.connectedUsers[userid];
+      const userSocket = connectedUsers[userid];
       if (userSocket) {
         const msg = {
           _id: new Date().getTime(),
-          text: data.text,
+          text,
           createdAt: new Date(),
           user: {
-            _id: req.usuarioLogado.user._id,
-            name: req.usuarioLogado.user.nome,
+            _id,
+            name: nome,
           },
         };
-        req.io.to(userSocket).emit('response', msg);
+        io.to(userSocket).emit('response', msg);
       }
     }
 
@@ -106,13 +104,14 @@ chatController.prototype.sendMessage = async (req, res) => {
 };
 
 chatController.prototype.getMyChats = async (req, res) => {
+  const { usuarioLogado, params } = req;
+  const { user } = usuarioLogado;
+  const { page } = params;
+  const { _id } = user;
   const validationContract = new validation();
-  validationContract.isRequired(req.params.page, 'pageNumber obrigatório');
+  validationContract.isRequired(page, 'pageNumber obrigatório');
   try {
-    const resultado = await _repo.getMyChats(
-      req.params.page,
-      req.usuarioLogado.user._id,
-    );
+    const resultado = await _repo.getMyChats(page, _id);
     res.status(200).send(resultado);
   } catch (erro) {
     res.status(500).send({ message: 'Erro no processamento', error: erro });

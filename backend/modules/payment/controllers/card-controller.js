@@ -8,7 +8,10 @@ function cardController() {}
 
 cardController.prototype.get = async (req, res) => {
   try {
-    const cards = await _repo.getMyAll(req.usuarioLogado.user._id);
+    const { usuarioLogado } = req;
+    const { user } = usuarioLogado;
+    const { _id } = user;
+    const cards = await _repo.getMyAll(_id);
     res.status(200).send(cards);
   } catch (e) {
     res.status(500).send({ message: 'Internal server error', error: e });
