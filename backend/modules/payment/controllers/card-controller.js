@@ -1,8 +1,8 @@
 const repository = require('../repositories/card-repository');
 
 const _repo = new repository();
-const ctrlBase = require('../bin/base/controller-base');
-const validation = require('../bin/helpers/validation');
+const ctrlBase = require('../../../bin/base/controller-base');
+const validation = require('../../../bin/helpers/validation');
 
 function cardController() {}
 

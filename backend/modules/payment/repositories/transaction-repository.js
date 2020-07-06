@@ -1,5 +1,5 @@
 require('../models/transaction-model');
-const base = require('../bin/base/repository-base');
+const base = require('../../../bin/base/repository-base');
 
 class transactionRepository {
   constructor() {

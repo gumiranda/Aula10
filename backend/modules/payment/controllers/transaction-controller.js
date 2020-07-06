@@ -1,15 +1,15 @@
 const repository = require('../repositories/transaction-repository');
 const repositoryCard = require('../repositories/card-repository');
-const repositoryUser = require('../repositories/user-repository');
+const repositoryUser = require('../../user/repositories/user-repository');
 
 const _repo = new repository();
 const _repoCard = new repositoryCard();
 const _repoUser = new repositoryUser();
 
-const ctrlBase = require('../bin/base/controller-base');
-const validation = require('../bin/helpers/validation');
+const ctrlBase = require('../../../bin/base/controller-base');
+const validation = require('../../../bin/helpers/validation');
 const pagarme = require('pagarme');
-const variables = require('../bin/configuration/variables');
+const variables = require('../../../bin/configuration/variables');
 const CryptoJS = require('react-native-crypto-js');
 const moment = require('moment');
 

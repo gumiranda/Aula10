@@ -1,7 +1,7 @@
 require('../models/user-model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const base = require('../bin/base/repository-base');
+const base = require('../../../bin/base/repository-base');
 
 class userRepository {
   constructor() {

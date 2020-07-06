@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const repository = require('../repositories/user-repository');
-const validation = require('../bin/helpers/validation');
-const ctrlBase = require('../bin/base/controller-base');
-const variables = require('../bin/configuration/variables');
+const validation = require('../../../bin/helpers/validation');
+const ctrlBase = require('../../../bin/base/controller-base');
+const variables = require('../../../bin/configuration/variables');
 
 const _repo = new repository();
 
