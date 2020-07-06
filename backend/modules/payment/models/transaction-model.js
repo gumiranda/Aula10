@@ -20,7 +20,7 @@ const transactionModel = new schema(
 
 transactionModel.pre('save', (next) => {
   const agora = new Date();
-  if (!this.dataCriacao) this.dataCriacao = agora;
+  if (!this.createdAt) this.createdAt = agora;
   next();
 });
 

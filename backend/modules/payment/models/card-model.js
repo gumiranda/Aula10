@@ -28,7 +28,7 @@ const cardModel = new schema(
 
 cardModel.pre('save', (next) => {
   const agora = new Date();
-  if (!this.dataCriacao) this.dataCriacao = agora;
+  if (!this.createdAt) this.createdAt = agora;
   next();
 });
 

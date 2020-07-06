@@ -10,19 +10,19 @@ const _repo = new repository();
 function userController() {}
 
 userController.prototype.post = async (req, res) => {
-  const _validationContract = new validation();
-  _validationContract.isRequired(req.body.nome, 'Informe seu nome pentelho');
-  _validationContract.isRequired(req.body.email, 'Informe seu email pentelho');
-  _validationContract.isRequired(req.body.senha, 'Informe sua senha pentelho');
-  _validationContract.isRequired(
+  const validationContract = new validation();
+  validationContract.isRequired(req.body.nome, 'Informe seu nome pentelho');
+  validationContract.isRequired(req.body.email, 'Informe seu email pentelho');
+  validationContract.isRequired(req.body.senha, 'Informe sua senha pentelho');
+  validationContract.isRequired(
     req.body.senhaConfirmacao,
     'Informe sua senha confirmação pentelho',
   );
-  _validationContract.isTrue(
+  validationContract.isTrue(
     req.body.senhaConfirmacao !== req.body.senha,
     'As senhas devem ser iguais pentelho',
   );
-  _validationContract.isEmail(
+  validationContract.isEmail(
     req.body.email,
     'Informe um email válido pentelho',
   );
@@ -30,33 +30,33 @@ userController.prototype.post = async (req, res) => {
   try {
     const usuarioEmailExiste = await _repo.IsEmailExiste(req.body.email);
     if (usuarioEmailExiste) {
-      _validationContract.isTrue(
+      validationContract.isTrue(
         usuarioEmailExiste.nome != undefined,
         `Já existe o email ${req.body.email} cadastrado no banco de dados`,
       );
     }
     const salt = await bcrypt.genSaltSync(10);
     req.body.senha = await bcrypt.hashSync(req.body.senha, salt);
-    ctrlBase.post(_repo, _validationContract, req, res);
+    ctrlBase.post(_repo, validationContract, req, res);
   } catch (e) {
     res.status(500).send({ message: 'Internal server error', error: e });
   }
 };
 userController.prototype.put = async (req, res) => {
-  const _validationContract = new validation();
-  _validationContract.isRequired(req.body.nome, 'Informe seu nome pentelho');
-  _validationContract.isRequired(req.params.id, 'Informe seu id pentelho');
-  _validationContract.isRequired(req.body.email, 'Informe seu email pentelho');
-  _validationContract.isRequired(req.body.senha, 'Informe sua senha pentelho');
-  _validationContract.isRequired(
+  const validationContract = new validation();
+  validationContract.isRequired(req.body.nome, 'Informe seu nome pentelho');
+  validationContract.isRequired(req.params.id, 'Informe seu id pentelho');
+  validationContract.isRequired(req.body.email, 'Informe seu email pentelho');
+  validationContract.isRequired(req.body.senha, 'Informe sua senha pentelho');
+  validationContract.isRequired(
     req.body.senhaConfirmacao,
     'Informe sua senha confirmação pentelho',
   );
-  _validationContract.isTrue(
+  validationContract.isTrue(
     req.body.senhaConfirmacao !== req.body.senha,
     'As senhas devem ser iguais pentelho',
   );
-  _validationContract.isEmail(
+  validationContract.isEmail(
     req.body.email,
     'Informe um email válido pentelho',
   );
@@ -64,14 +64,14 @@ userController.prototype.put = async (req, res) => {
   try {
     const usuarioEmailExiste = await _repo.IsEmailExiste(req.body.email);
     if (usuarioEmailExiste) {
-      _validationContract.isTrue(
+      validationContract.isTrue(
         usuarioEmailExiste.nome != undefined &&
           usuarioEmailExiste._id != req.params.id,
         `Já existe o email ${req.body.email} cadastrado no banco de dados`,
       );
     }
     if (req.usuarioLogado.user._id.toString() === req.params.id) {
-      ctrlBase.put(_repo, _validationContract, req, res);
+      ctrlBase.put(_repo, validationContract, req, res);
     } else {
       res.status(401).send({ message: 'Você não tem permissão' });
     }
@@ -105,30 +105,42 @@ userController.prototype.get = async (req, res) => {
   ctrlBase.get(_repo, req, res);
 };
 userController.prototype.delete = async (req, res) => {
-  _validationContract.isRequired(req.params.id, 'Informe seu id pentelho');
+  const validationContract = new validation();
+  validationContract.isRequired(req.params.id, 'Informe seu id pentelho');
   ctrlBase.delete(_repo, req, res);
 };
-
+userController.prototype.getByPage = async (req, res) => {
+  const validationContract = new validation();
+  const { params } = req;
+  const { page } = params;
+  validationContract.isRequired(page, 'pageNumber obrigatório');
+  try {
+    const resultado = await _repo.getByPage(page);
+    res.status(200).send(resultado);
+  } catch (erro) {
+    res.status(500).send({ message: 'Erro no processamento', error: erro });
+  }
+};
 userController.prototype.authenticate = async (req, res) => {
-  const _validationContract = new validation();
-  _validationContract.isRequired(req.body.email, 'Informe seu email pentelho');
-  _validationContract.isRequired(req.body.senha, 'Informe sua senha pentelho');
-  _validationContract.isRequired(
+  const validationContract = new validation();
+  validationContract.isRequired(req.body.email, 'Informe seu email pentelho');
+  validationContract.isRequired(req.body.senha, 'Informe sua senha pentelho');
+  validationContract.isRequired(
     req.body.senhaConfirmacao,
     'Informe sua senha confirmação pentelho',
   );
-  _validationContract.isTrue(
+  validationContract.isTrue(
     req.body.senhaConfirmacao !== req.body.senha,
     'As senhas devem ser iguais pentelho',
   );
-  _validationContract.isEmail(
+  validationContract.isEmail(
     req.body.email,
     'Informe um email válido pentelho',
   );
-  if (!_validationContract.isValid()) {
+  if (!validationContract.isValid()) {
     res.status(400).send({
       message: 'Não foi possível efetuar o login',
-      validation: _validationContract.errors(),
+      validation: validationContract.errors(),
     });
     return;
   }

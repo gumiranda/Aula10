@@ -17,8 +17,8 @@ function transactionController() {}
 
 transactionController.prototype.post = async (req, res) => {
   try {
-    const _validationContract = new validation();
-    _validationContract.isRequired(req.body.cpf, 'Informe seu cpf pentelho');
+    const validationContract = new validation();
+    validationContract.isRequired(req.body.cpf, 'Informe seu cpf pentelho');
     const data = req.body;
     const encryption_key = variables.Pagarme.pagarmeKeyTest;
     const client = await pagarme.client.connect({ api_key: encryption_key });
