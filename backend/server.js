@@ -8,6 +8,7 @@ const variables = require('./bin/configuration/variables');
 // ROTAS
 const userRouter = require('./modules/user/routes/user-router');
 const cardRouter = require('./modules/payment/routes/card-router');
+const chatRouter = require('./modules/chat/routes/chat-router');
 const transactionRouter = require('./modules/payment/routes/transaction-router');
 
 const app = express();
@@ -45,6 +46,7 @@ mongoose.connect(variables.Database.connection, {
 app.use('/api/user', userRouter);
 app.use('/api/transaction', transactionRouter);
 app.use('/api/card', cardRouter);
+app.use('/api/chat', chatRouter);
 
 const port = process.env.PORT || 3333;
 
