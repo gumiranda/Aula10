@@ -38,7 +38,7 @@ chatController.prototype.deleteMessage = async (req, res) => {
     if (resultado !== 'Operação inválida') {
       res.status(202).send({ message: 'Mensagem excluida com sucesso' });
     } else {
-      res.status(202).send({ message: 'Não foi possível apagar mensagem' });
+      res.status(401).send({ message: 'Não foi possível apagar mensagem' });
     }
   } catch (erro) {
     res.status(500).send({ message: 'Erro no processamento', error: erro });
