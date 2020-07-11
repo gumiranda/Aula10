@@ -46,7 +46,7 @@ export default function Chats({navigation}) {
       }
     }
     loadChats();
-  }, [count, page, chats]);
+  }, [page]);
   async function verificaPage(nextPage) {
     const limit = count / 10;
     if (10 * page >= chats.length && page < limit) {

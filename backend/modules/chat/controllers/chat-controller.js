@@ -19,7 +19,16 @@ chatController.prototype.post = async (req, res) => {
     return;
   }
   req.body.userRemet = req.usuarioLogado.user._id;
-  ctrlBase.post(_repo, validationContract, req, res);
+
+  const chat = await _repo.verifyChat(
+    req.body.userDest,
+    req.usuarioLogado.user._id,
+  );
+  if (chat === false) {
+    ctrlBase.post(_repo, validationContract, req, res);
+  } else {
+    res.status(201).send(chat);
+  }
 };
 
 chatController.prototype.deleteMessage = async (req, res) => {
@@ -154,7 +163,7 @@ chatController.prototype.getByIdPaginate = async (req, res) => {
     return;
   }
   try {
-    const resultado = await _repo.getByIdPaginate(page, id);
+    const resultado = await _repo.getByIdPaginate(id, page);
     res.status(200).send(resultado);
   } catch (erro) {
     res.status(500).send({ message: 'Erro no processamento', error: erro });

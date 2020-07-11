@@ -67,7 +67,7 @@ function ChatDetails({navigation}) {
   );
 
   useEffect(() => {
-    socket.current.on('response', data => {
+    socket.on('response', data => {
       setRecvMessages(prevState => GiftedChat.append(prevState, data));
       setCount(prevState => prevState + 1);
       setNewCount(prevState => prevState + 1);

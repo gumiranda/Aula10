@@ -44,7 +44,7 @@ export default function Users({navigation}) {
       }
     }
     loadUsers();
-  }, [count, page, users]);
+  }, [page, count, users]);
   async function verificaPage(nextPage) {
     const limit = count / 10;
     if (10 * page >= users.length && page < limit) {
@@ -62,8 +62,7 @@ export default function Users({navigation}) {
       });
       if (response.data) {
         const {_id: chatId} = response.data;
-        Alert.alert('', 'Chat criado');
-        navigation.push('Details', {
+        navigation.push('ChatDetails', {
           chatId,
           destinatario: item,
         });
