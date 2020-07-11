@@ -63,7 +63,7 @@ class chatRepository {
             },
           ],
         },
-        this.projection,
+        this.projection2,
       )
       .populate({ path: 'userDest', select: 'nome photo_url' })
       .populate({ path: 'userRemet', select: 'nome photo_url' })
@@ -71,12 +71,35 @@ class chatRepository {
       .limit(10)
       .sort({ createdAt: -1 });
     const chatsCount = await this._base._model
-      .find({ $or: [{ userRemet: user }, { userDest: user }] }, this.projection)
+      .find(
+        { $or: [{ userRemet: user }, { userDest: user }] },
+        this.projection2,
+      )
       .count();
     return {
       chats,
       chatsCount,
     };
+  }
+
+  async verifyChat(userDest, userRemet) {
+    const chat = await this._base._model.findOne(
+      {
+        $or: [
+          {
+            $and: [{ userDest }, { userRemet }],
+          },
+          {
+            $and: [{ userRemet: userDest }, { userDest: userRemet }],
+          },
+        ],
+      },
+      this.projection2,
+    ).lean();
+    if (chat !== null) {
+      return chat;
+    }
+    return false;
   }
 
   async getByIdPaginate(id, page) {
