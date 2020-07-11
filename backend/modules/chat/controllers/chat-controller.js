@@ -8,6 +8,16 @@ function chatController() {}
 chatController.prototype.post = async (req, res) => {
   const validationContract = new validation();
   validationContract.isRequired(req.body.userDest, 'a userDest é obrigatória');
+  if (!validationContract.isValid()) {
+    res
+      .status(400)
+      .send({
+        message: 'Existem dados inválidos na sua requisição',
+        validation: validationContract.errors(),
+      })
+      .end();
+    return;
+  }
   req.body.userRemet = req.usuarioLogado.user._id;
   ctrlBase.post(_repo, validationContract, req, res);
 };
@@ -59,19 +69,17 @@ chatController.prototype.sendMessage = async (req, res) => {
     id,
     'o id do chat que será atualizado obrigatório',
   );
-
+  if (!validationContract.isValid()) {
+    res
+      .status(400)
+      .send({
+        message: 'Existem dados inválidos na sua requisição',
+        validation: validationContract.errors(),
+      })
+      .end();
+    return;
+  }
   try {
-    if (!validationContract.isValid()) {
-      res
-        .status(400)
-        .send({
-          message: 'Existem dados inválidos na sua requisição',
-          validation: validationContract.errors(),
-        })
-        .end();
-      return;
-    }
-
     const resultado = await _repo.sendMessage(id, text, _id);
     if (connectedUsers) {
       let userid;
@@ -110,6 +118,16 @@ chatController.prototype.getMyChats = async (req, res) => {
   const { _id } = user;
   const validationContract = new validation();
   validationContract.isRequired(page, 'pageNumber obrigatório');
+  if (!validationContract.isValid()) {
+    res
+      .status(400)
+      .send({
+        message: 'Existem dados inválidos na sua requisição',
+        validation: validationContract.errors(),
+      })
+      .end();
+    return;
+  }
   try {
     const resultado = await _repo.getMyChats(page, _id);
     res.status(200).send(resultado);
@@ -120,5 +138,26 @@ chatController.prototype.getMyChats = async (req, res) => {
 chatController.prototype.delete = async (req, res) => {
   ctrlBase.delete(_repo, req, res);
 };
-
+chatController.prototype.getByIdPaginate = async (req, res) => {
+  let validationContract = new validation();
+  const { page, id } = req.params;
+  validationContract.isRequired(page, 'pageNumber obrigatório');
+  validationContract.isRequired(id, 'id do chat obrigatório');
+  if (!validationContract.isValid()) {
+    res
+      .status(400)
+      .send({
+        message: 'Existem dados inválidos na sua requisição',
+        validation: validationContract.errors(),
+      })
+      .end();
+    return;
+  }
+  try {
+    const resultado = await _repo.getByIdPaginate(page, id);
+    res.status(200).send(resultado);
+  } catch (erro) {
+    res.status(500).send({ message: 'Erro no processamento', error: erro });
+  }
+};
 module.exports = chatController;
