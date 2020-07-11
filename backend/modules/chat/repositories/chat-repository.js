@@ -79,6 +79,14 @@ class chatRepository {
     };
   }
 
+  async getByIdPaginate(id, page) {
+    const position = page * -20;
+    const array = await this._base._model
+      .findOne({ _id: id }, { messages: { $slice: [position, 20] } })
+      .populate({ path: 'messages.user', select: 'nome photo_url' });
+    return array;
+  }
+
   async delete(id) {
     return this._base.delete(id);
   }
