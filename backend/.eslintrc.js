@@ -15,5 +15,12 @@ module.exports = {
   },
   rules: {
     'import/prefer-default-export': 'off',
+    'no-underscore-dangle': 'off',
+    'import/order': 'off',
+    'no-use-before-define': 'off',
+    camelcase: 'off',
+    'no-unused-expressions': 'off',
+    'no-underscore-dangle': 'off',
+    'no-undef': 'off',
   },
 };
