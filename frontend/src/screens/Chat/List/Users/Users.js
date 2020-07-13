@@ -1,17 +1,49 @@
 /* eslint-disable no-restricted-syntax */
 import React, {useEffect, useState} from 'react';
-import {Alert, TouchableOpacity} from 'react-native';
+import {Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import Background from '../../../../components/Background/Background';
 import {Container, Left, Avatar, Info, Name, CardUser, List} from '../styles';
 import api from '../../../../services/api';
+import {getRequest, reset} from '../../../../appStore/appModules/user/list';
+import {appColors} from '../../../../utils/appColors';
 
 export default function Users({navigation}) {
+  const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(true);
+  const {usersList, usersLoading, usersPage, usersTotal} = useSelector(
+    state => state.user,
+  );
+  useEffect(() => {
+    async function getUsers() {
+      dispatch(getRequest({page: 1}));
+    }
+    getUsers();
+  }, []);
+  useEffect(() => {
+    if (!usersLoading) {
+      setLoading(false);
+      setFirstLoading(false);
+    }
+  }, [usersLoading]);
+  const onEndReached = () => {
+    console.tron.log(usersLoading, usersTotal, usersPage);
+    if (
+      !firstLoading &&
+      !usersLoading &&
+      !loading &&
+      usersPage * 10 < usersTotal
+    ) {
+      setLoading(true);
+      dispatch(getRequest({page: usersPage + 1, nextPage: true}));
+    }
+    return true;
+  };
   useEffect(() => {
     async function loadUsers() {
       try {
@@ -52,8 +84,8 @@ export default function Users({navigation}) {
     }
   }
   async function refresh() {
-    setPage(1);
-    setUsers([]);
+    dispatch(reset());
+    dispatch(getRequest({page: 1}));
   }
   async function chamaNoChat(item) {
     try {
@@ -76,30 +108,35 @@ export default function Users({navigation}) {
   return (
     <Background>
       <Container>
-        <List
-          data={users}
-          onEndReached={() => verificaPage(page + 1)}
-          onEndReachedThreshold={0.1}
-          refreshing={refreshing}
-          onRefresh={() => refresh()}
-          keyExtractor={item => String(item._id)}
-          renderItem={({item}) => (
-            <TouchableOpacity onPress={() => chamaNoChat(item)}>
-              <CardUser>
-                <Left>
-                  <Avatar
-                    source={{
-                      uri: item.photo_url,
-                    }}
-                  />
-                  <Info>
-                    <Name>{item.nome}</Name>
-                  </Info>
-                </Left>
-              </CardUser>
-            </TouchableOpacity>
-          )}
-        />
+        {(usersLoading || loading) && (
+          <ActivityIndicator size="large" color={appColors.white} />
+        )}
+        {!firstLoading && (
+          <List
+            data={usersList || []}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.1}
+            refreshing={refreshing}
+            onRefresh={() => refresh()}
+            keyExtractor={item => String(item._id)}
+            renderItem={({item}) => (
+              <TouchableOpacity onPress={() => chamaNoChat(item)}>
+                <CardUser>
+                  <Left>
+                    <Avatar
+                      source={{
+                        uri: item.photo_url,
+                      }}
+                    />
+                    <Info>
+                      <Name>{item.nome}</Name>
+                    </Info>
+                  </Left>
+                </CardUser>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </Container>
     </Background>
   );
