@@ -1,5 +1,5 @@
 require('../models/card-model');
-const base = require('../bin/base/repository-base');
+const base = require('../../../bin/base/repository-base');
 
 class cardRepository {
   constructor() {
@@ -7,12 +7,12 @@ class cardRepository {
     this._projection = 'name cardNumber brand ';
   }
 
-  async getMyAll(user) {
-    return await this._base._model.find({ userId: user }, this._projection);
+  getMyAll(userId) {
+    return this._base._model.find({ userId }, this._projection);
   }
 
-  async getById(id) {
-    return await this._base.getById(id);
+  getById(id) {
+    return this._base.getById(id);
   }
 
   async delete(id, user) {

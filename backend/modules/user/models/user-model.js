@@ -10,12 +10,16 @@ const userModel = new schema(
   {
     nome: { trim: true, index: true, required: true, type: String },
     email: { type: String },
+    photo_url: { type: String },
     type: { type: String, default: 'client' },
     cpf: { type: String },
     phone: { type: String },
     senha: { type: String },
     ativo: { type: Boolean, required: true, default: true },
-    payDay: { type: Date,default:new Date(moment().add(7, 'days')._d.toISOString()) },
+    payDay: {
+      type: Date,
+      default: new Date(moment().add(7, 'days')._d.toISOString()),
+    },
     createdAt: { type: Date, default: Date.now },
   },
   { versionKey: false },

@@ -13,6 +13,9 @@ import Home from '../../screens/Home/Home';
 import PaymentAddress from '../../screens/Payment/PaymentAddress/PaymentAddress';
 import PaymentCart from '../../screens/Payment/PaymentCart/PaymentCart';
 import CompleteRegister from '../../screens/Payment/CompleteRegister/CompleteRegister';
+import Chats from '../../screens/Chat/List/Chats/Chats';
+import Users from '../../screens/Chat/List/Users/Users';
+import ChatDetails from '../../screens/Chat/ChatDetails/ChatDetails';
 import {appColors} from '../../utils/appColors';
 import Plans from '../../screens/Payment/Plans/Plans';
 import CheckoutEasy from '../../screens/Payment/CheckoutEasy/CheckoutEasy';
@@ -81,6 +84,26 @@ const RootStack = createDrawerNavigator(
         },
       ),
       navigationOptions: () => ({drawerLabel: 'Pagamento'}),
+    },
+    Chat: {
+      screen: createStackNavigator(
+        {
+          Chats,
+          Users,
+          ChatDetails,
+        },
+        {
+          initialRouteName: 'Users',
+          defaultNavigationOptions: {
+            headerTransparent: true,
+            headerTintColor: appColors.white,
+            headerLeftContainerStyle: {
+              marginLeft: 0,
+            },
+          },
+        },
+      ),
+      navigationOptions: () => ({drawerLabel: 'Chat'}),
     },
     Logout: {
       screen: Logout,
