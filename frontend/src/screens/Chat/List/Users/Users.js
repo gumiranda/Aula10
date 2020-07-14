@@ -10,9 +10,6 @@ import {appColors} from '../../../../utils/appColors';
 
 export default function Users({navigation}) {
   const dispatch = useDispatch();
-  const [users, setUsers] = useState([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [firstLoading, setFirstLoading] = useState(true);
@@ -32,7 +29,6 @@ export default function Users({navigation}) {
     }
   }, [usersLoading]);
   const onEndReached = () => {
-    console.tron.log(usersLoading, usersTotal, usersPage);
     if (
       !firstLoading &&
       !usersLoading &&
@@ -44,45 +40,6 @@ export default function Users({navigation}) {
     }
     return true;
   };
-  useEffect(() => {
-    async function loadUsers() {
-      try {
-        const response = await api.get(`user/page/${page}`);
-        setCount(response.data.usersCount);
-        const cont = response.data.usersCount / 10;
-        if (response) {
-          if (response.data.users) {
-            if (response.data.users.length > 0) {
-              if (page > 1) {
-                if (10 * page > users.length && page < cont) {
-                  const usersMerged = [...users, ...response.data.users];
-                  const mapa = new Map();
-                  for (const x of usersMerged) {
-                    mapa.set(x._id, x);
-                  }
-                  const final = [...mapa.values()];
-                  setUsers(final);
-                }
-              } else if (users.length === 0) {
-                setUsers(response.data.users);
-              }
-            }
-          }
-        }
-      } catch (e) {
-        Alert.alert('', 'Erro ao carregar os usuários');
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadUsers();
-  }, [page, count, users]);
-  async function verificaPage(nextPage) {
-    const limit = count / 10;
-    if (10 * page >= users.length && page < limit) {
-      setPage(nextPage);
-    }
-  }
   async function refresh() {
     dispatch(reset());
     dispatch(getRequest({page: 1}));

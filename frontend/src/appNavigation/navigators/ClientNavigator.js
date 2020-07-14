@@ -85,10 +85,9 @@ const RootStack = createDrawerNavigator(
       ),
       navigationOptions: () => ({drawerLabel: 'Pagamento'}),
     },
-    Chat: {
+    User: {
       screen: createStackNavigator(
         {
-          Chats,
           Users,
           ChatDetails,
         },
@@ -103,7 +102,26 @@ const RootStack = createDrawerNavigator(
           },
         },
       ),
-      navigationOptions: () => ({drawerLabel: 'Chat'}),
+      navigationOptions: () => ({drawerLabel: 'Pessoas'}),
+    },
+    Chat: {
+      screen: createStackNavigator(
+        {
+          Chats,
+          ChatDetails,
+        },
+        {
+          initialRouteName: 'Chats',
+          defaultNavigationOptions: {
+            headerTransparent: true,
+            headerTintColor: appColors.white,
+            headerLeftContainerStyle: {
+              marginLeft: 0,
+            },
+          },
+        },
+      ),
+      navigationOptions: () => ({drawerLabel: 'Minhas conversas'}),
     },
     Logout: {
       screen: Logout,
