@@ -34,19 +34,19 @@ export default function user(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case '@user/LIST_USERS_SUCCESS': {
+      case '@user/LIST_SUCCESS': {
         draft.usersLoading = false;
         draft.usersTotal = action.payload.usersTotal;
         draft.usersList = action.payload.usersList;
         break;
       }
-      case '@user/LIST_USERS_REQUEST': {
+      case '@user/LIST_REQUEST': {
         draft.usersLoading = true;
         draft.usersTotal = 0;
         draft.usersPage = action.payload.page;
         break;
       }
-      case '@user/LIST_USERS_FAILURE': {
+      case '@user/LIST_FAILURE': {
         draft.usersLoading = false;
         break;
       }

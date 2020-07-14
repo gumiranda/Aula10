@@ -91,6 +91,6 @@ export function* getUsers({payload}) {
 
 export default all([
   takeLatest('@user/UPDATE_PROFILE_REQUEST', updateProfile),
-  takeLatest('@user/LIST_USERS_REQUEST', getUsers),
+  takeLatest('@user/LIST_REQUEST', getUsers),
   takeLatest('@user/COMPLETE_PROFILE_REQUEST', completeProfile),
 ]);
