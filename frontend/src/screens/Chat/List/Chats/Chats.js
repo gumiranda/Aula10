@@ -55,11 +55,8 @@ export default function Chats({navigation}) {
   }
   return (
     <Background>
-      <Container>
-        {(chatsLoading || loading) && (
-          <ActivityIndicator size="large" color={appColors.white} />
-        )}
-        {!firstLoading && (
+      {!firstLoading && (
+        <Container>
           <List
             data={chatsList || []}
             onEndReached={onEndReached}
@@ -88,8 +85,11 @@ export default function Chats({navigation}) {
               </TouchableOpacity>
             )}
           />
-        )}
-      </Container>
+        </Container>
+      )}
+      {(chatsLoading || loading) && (
+        <ActivityIndicator size="large" color={appColors.white} />
+      )}
     </Background>
   );
 }

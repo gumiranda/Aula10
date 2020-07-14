@@ -64,11 +64,8 @@ export default function Users({navigation}) {
   }
   return (
     <Background>
-      <Container>
-        {(usersLoading || loading) && (
-          <ActivityIndicator size="large" color={appColors.white} />
-        )}
-        {!firstLoading && (
+      {!firstLoading && (
+        <Container>
           <List
             data={usersList || []}
             onEndReached={onEndReached}
@@ -93,8 +90,11 @@ export default function Users({navigation}) {
               </TouchableOpacity>
             )}
           />
-        )}
-      </Container>
+        </Container>
+      )}
+      {(usersLoading || loading) && (
+        <ActivityIndicator size="large" color={appColors.white} />
+      )}
     </Background>
   );
 }
