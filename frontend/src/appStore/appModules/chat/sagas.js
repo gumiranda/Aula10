@@ -3,7 +3,6 @@ import {Alert} from 'react-native';
 import api from '../../../services/api';
 import {getSuccess, getFailure} from './list';
 import {getSuccessDetails, getFailureDetails} from './details';
-import {GiftedChat} from 'react-native-gifted-chat';
 
 export function* getChats({payload}) {
   try {
