@@ -12,7 +12,7 @@ export const appColors = {
   white60: 'rgba(255,255,255,0.6)',
   white90: 'rgba(255,255,255,0.9)',
   black: 'black',
-  white: '#fff',
+  white: '#ffffff',
   gray: 'gray',
   ligthGray: '#D8D8D8',
   transparent: 'transparent',
