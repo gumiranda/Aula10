@@ -1,14 +1,24 @@
 import React, {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {View} from 'react-native';
+import {NeuView} from 'react-native-neu-element';
+import {darken} from 'polished';
+import {
+  Asset,
+  Constants,
+  FileSystem,
+  Permissions,
+} from 'react-native-unimodules';
 import {Title} from './styles';
 import Background from '../../components/Background/Background';
-import {NeuView} from 'react-native-neu-element';
 import {appColors} from '../../utils/appColors';
 import appMetrics from '../../utils/appMetrics';
-import {darken} from 'polished';
+
 export default function Home({navigation}) {
   const profile = useSelector(state => state.user.profile);
+  useEffect(() => {
+    console.log(Constants.systemFonts);
+  }, []);
   useEffect(() => {
     if (new Date(profile.payDay).getTime() < new Date().getTime()) {
       if (profile.cpf && profile.phone) {
@@ -32,7 +42,8 @@ export default function Home({navigation}) {
           color={appColors.primary}
           height={100}
           width={appMetrics.DEVICE_WIDTH - 80}
-          borderRadius={16}></NeuView>
+          borderRadius={16}
+        />
       </View>
       <View
         style={{
@@ -46,7 +57,8 @@ export default function Home({navigation}) {
           height={100}
           width={appMetrics.DEVICE_WIDTH - 80}
           borderRadius={16}
-          inset></NeuView>
+          inset
+        />
       </View>
       <View
         style={{
@@ -60,7 +72,8 @@ export default function Home({navigation}) {
           height={100}
           width={appMetrics.DEVICE_WIDTH - 80}
           borderRadius={16}
-          isConvex></NeuView>
+          isConvex
+        />
       </View>
       <View
         style={{
@@ -74,7 +87,8 @@ export default function Home({navigation}) {
           height={100}
           width={appMetrics.DEVICE_WIDTH - 80}
           borderRadius={16}
-          concave></NeuView>
+          concave
+        />
       </View>
     </>
   );
